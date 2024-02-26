@@ -1,0 +1,15 @@
+python-dotenv
+dataclass_wizard
+jq
+tqdm
+# openai, langchain
+openai
+langchain
+langchain_openai
+langchain-community
+langchain-core
+langchain-experimental
+langchainhub
+chromadb
+tiktoken
+unstructured[all-docs]
