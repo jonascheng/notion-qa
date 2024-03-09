@@ -52,6 +52,37 @@ def text_splitter(
     return chunks
 
 
+# split markdown documents into chunks function
+def markdown_splitter(
+        documents,
+        chunk_size: int = 900,
+        chunk_overlap: int = 0,):
+    from langchain.text_splitter import MarkdownHeaderTextSplitter
+
+    headers_to_split_on = [
+        ("#", "Header 1"),
+        ("##", "Header 2"),
+    ]
+
+    text_splitter = MarkdownHeaderTextSplitter(
+        headers_to_split_on=headers_to_split_on,
+        strip_headers=True)
+
+    # a empty list to store the documents
+    chunks = []
+    # iterate through the documents
+    for document in documents:
+        # split the document and append to chunks
+        _chunks = text_splitter.split_text(document.page_content)
+        # merge original metadata with new chunks
+        for chunk in _chunks:
+            # merge chunk.metadata and document.metadata
+            chunk.metadata = document.metadata | chunk.metadata
+        chunks.extend(_chunks)
+
+    return chunks
+
+
 # token and cost estimation in USD function
 def calculate_embedding_cost(documents) -> (int, float):
     import tiktoken

@@ -15,6 +15,16 @@ LOGGING_CONFIG = {
         }
     },
     "loggers": {
+        "langchain": {
+            "handlers": ["stdout"],
+            "level": "INFO",
+            "propagate": False
+        },
+        "langchain_openai": {
+            "handlers": ["stdout"],
+            "level": "INFO",
+            "propagate": False
+        },
         "index": {
             "handlers": ["stdout"],
             "level": "INFO",

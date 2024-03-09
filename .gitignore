@@ -9,5 +9,8 @@
 /assets/**
 *.documents
 
+# chroma
+**/chroma/**
+
 # MacOS
 .DS_Store

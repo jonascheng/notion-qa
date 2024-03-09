@@ -9,9 +9,6 @@ from langchain_community.vectorstores import Chroma
 from multiprocessing import Pool
 from tqdm import tqdm
 
-from util.openai import embedder, text_splitter, calculate_embedding_cost
-from util.tqdm import chunker
-
 
 # Get logger
 logger = logging.getLogger(__name__)
@@ -63,6 +60,8 @@ class Embeddings(metaclass=abc.ABCMeta):
     def _add_documents(
             self,
             documents: list) -> bool:
+        from util.openai import embedder
+
         return_value = False
 
         # catch exception to prevent from crashing in multiprocessing
@@ -94,6 +93,9 @@ class Embeddings(metaclass=abc.ABCMeta):
 
     # entry point to run the process
     def run(self):
+        from util.openai import calculate_embedding_cost
+        from util.tqdm import chunker
+
         # load documents
         logger.info(f'Loading data from {self.src_filepath}')
         documents = self._loader()
@@ -208,8 +210,15 @@ class NotionEmbeddings(Embeddings):
 
     # custom function to split documents into chunked documents
     def _splitter(self, documents: list) -> list:
-        return text_splitter(
+        from util.openai import markdown_splitter, text_splitter
+
+        md_header_splits = markdown_splitter(
             documents,
+            self.chunk_size,
+            self.chunk_overlap)
+
+        return text_splitter(
+            md_header_splits,
             self.chunk_size,
             self.chunk_overlap,
             separators=["\n\n", "\n", "。", "："])
